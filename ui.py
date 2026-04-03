@@ -85,15 +85,27 @@ def config_menu(config):
     return config
 
 def choose_platform(config):
-    """平台选择菜单"""
+    """平台选择菜单，对波点音乐给出警告"""
     print(colorize("\n请选择音乐平台：", Colors.BOLD, config["color_enabled"]))
     for key, plat in PLATFORMS.items():
         print(f"{key}. {plat['name']}")
     while True:
         choice = input(colorize("⌨️ 请输入序号(1-3): ", Colors.CYAN, config["color_enabled"])).strip()
-        if choice in PLATFORMS:
+        if choice not in PLATFORMS:
+            print(colorize("❔你可能输入错了？请重新选择 1-3", Colors.RED, config["color_enabled"]))
+            continue
+        
+        # 如果选择波点音乐（序号3），给出警告
+        if choice == "3":
+            print(colorize("⚠️  警告：波点音乐接口可能只返回11秒试听片段，建议使用其他平台获取完整歌曲。", Colors.YELLOW, config["color_enabled"]))
+            confirm = input(colorize("是否继续使用波点音乐？(y/N): ", Colors.CYAN, config["color_enabled"])).strip().lower()
+            if confirm == 'y':
+                return PLATFORMS[choice]
+            else:
+                print(colorize("已取消，请重新选择平台。", Colors.YELLOW, config["color_enabled"]))
+                continue
+        else:
             return PLATFORMS[choice]
-        print(colorize("❔你可能输入错了？请重新选择 1-3", Colors.RED, config["color_enabled"]))
 
 def main_menu(config):
     """主菜单"""

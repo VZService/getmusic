@@ -47,9 +47,11 @@ def main():
                 singer = s.get("singer", "未知")
                 print(f"{idx}. {song_name} - {singer}")
 
+            # 用户选择序号
             if len(songs) == 1:
                 print(colorize("\n🎯 只有一首歌曲，自动选中。", Colors.GREEN, config["color_enabled"]))
                 selected = songs[0]
+                sel = 1
             else:
                 while True:
                     try:
@@ -59,14 +61,15 @@ def main():
                             selected = songs[sel-1]
                             break
                         else:
-                            print(colorize(f"请输入 1~{len(songs)} 之间的数字，", Colors.RED, config["color_enabled"]))
+                            print(colorize(f"请输入 1~{len(songs)} 之间的数字", Colors.RED, config["color_enabled"]))
                     except ValueError:
-                        print(colorize("请输入有效数字，", Colors.RED, config["color_enabled"]))
+                        print(colorize("请输入有效数字", Colors.RED, config["color_enabled"]))
 
             song_name = selected.get("song", "未知")
             singer = selected.get("singer", "未知")
             print(colorize(f"\n🎵 正在获取《{song_name}》的播放链接...", Colors.BLUE, config["color_enabled"]))
-            result = fetch_music_by_song(platform['url'], song_name, singer, config)
+            # 传入序号 sel（波点平台需要，其他平台忽略）
+            result = fetch_music_by_song(platform['url'], song_name, singer, config, sel)
             if result:
                 print(colorize(f"\n✅ 获取成功辣awa!", Colors.GREEN, config["color_enabled"]))
                 print(colorize(f"🎤 歌曲：{result['song']} - {result['singer']}", Colors.MAGENTA, config["color_enabled"]))
@@ -85,7 +88,7 @@ def main():
             config = config_menu(config)
 
         else:
-            print(colorize("无效选项，请重新输入，", Colors.RED, config["color_enabled"]))
+            print(colorize("无效选项，请重新输入", Colors.RED, config["color_enabled"]))
 
 if __name__ == "__main__":
     main()

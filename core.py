@@ -124,7 +124,12 @@ def api_request_with_retry(platform_url, params, config):
     return None
 
 def search_songs(platform_url, keyword, config):
-    params = {"msg": keyword, "n": config["default_num"]}
+    """搜索歌曲，根据平台自动选择参数名"""
+    if "bd.music" in platform_url:
+        params = {"msg": keyword, "num": config["default_num"]}
+    else:
+        params = {"msg": keyword, "n": config["default_num"]}
+    
     data = api_request_with_retry(platform_url, params, config)
     if not data or data.get("code") != 0:
         if data:
@@ -138,7 +143,39 @@ def search_songs(platform_url, keyword, config):
     else:
         return []
 
-def fetch_music_by_song(platform_url, song_name, singer, config):
+def fetch_music_by_song(platform_url, song_name, singer, config, index=1):
+    """
+    根据精确歌名和歌手获取播放链接
+    index: 对于波点平台，表示选择列表中的第几首（从1开始）
+    """
+    # 波点音乐：使用 n=index 获取单首播放链接（返回字典）
+    if "bd.music" in platform_url:
+        params = {"msg": song_name, "n": index}
+        data = api_request_with_retry(platform_url, params, config)
+        if not data or data.get("code") != 0:
+            return None
+        info = data.get("data")
+        # 返回的 data 可能是字典（单首）也可能是列表（如果 API 不一致，兼容处理）
+        if isinstance(info, dict):
+            music_url = info.get("music")
+            if music_url:
+                return {
+                    "music_url": music_url,
+                    "song": info.get("song", song_name),
+                    "singer": info.get("singer", singer)
+                }
+        elif isinstance(info, list) and len(info) > 0:
+            first = info[0]
+            music_url = first.get("music")
+            if music_url:
+                return {
+                    "music_url": music_url,
+                    "song": first.get("song", song_name),
+                    "singer": first.get("singer", singer)
+                }
+        return None
+
+    # 网易云、咪咕：使用 n=1，查询时拼接歌手名
     query = song_name
     if singer and singer != "未知":
         query = f"{song_name} {singer}"
