@@ -124,12 +124,8 @@ def api_request_with_retry(platform_url, params, config):
     return None
 
 def search_songs(platform_url, keyword, config):
-    """搜索歌曲，根据平台自动选择参数名"""
-    if "bd.music" in platform_url:
-        params = {"msg": keyword, "num": config["default_num"]}
-    else:
-        params = {"msg": keyword, "n": config["default_num"]}
-    
+    """搜索歌曲，统一使用 num 参数获取列表（所有平台均支持）"""
+    params = {"msg": keyword, "num": config["default_num"]}
     data = api_request_with_retry(platform_url, params, config)
     if not data or data.get("code") != 0:
         if data:
@@ -148,31 +144,64 @@ def fetch_music_by_song(platform_url, song_name, singer, config, index=1):
     根据精确歌名和歌手获取播放链接
     index: 对于波点平台，表示选择列表中的第几首（从1开始）
     """
-    # 波点音乐：使用 n=index 获取单首播放链接（返回字典）
+    # 波点音乐：尝试多种参数获取单首链接
     if "bd.music" in platform_url:
+        # 策略1：使用 n=index
         params = {"msg": song_name, "n": index}
         data = api_request_with_retry(platform_url, params, config)
-        if not data or data.get("code") != 0:
-            return None
-        info = data.get("data")
-        # 返回的 data 可能是字典（单首）也可能是列表（如果 API 不一致，兼容处理）
-        if isinstance(info, dict):
-            music_url = info.get("music")
-            if music_url:
-                return {
-                    "music_url": music_url,
-                    "song": info.get("song", song_name),
-                    "singer": info.get("singer", singer)
-                }
-        elif isinstance(info, list) and len(info) > 0:
-            first = info[0]
-            music_url = first.get("music")
-            if music_url:
-                return {
-                    "music_url": music_url,
-                    "song": first.get("song", song_name),
-                    "singer": first.get("singer", singer)
-                }
+        if data and data.get("code") == 0:
+            info = data.get("data")
+            if isinstance(info, dict):
+                music_url = info.get("music")
+                if music_url:
+                    return {
+                        "music_url": music_url,
+                        "song": info.get("song", song_name),
+                        "singer": info.get("singer", singer)
+                    }
+            elif isinstance(info, list) and len(info) > 0:
+                first = info[0]
+                music_url = first.get("music")
+                if music_url:
+                    return {
+                        "music_url": music_url,
+                        "song": first.get("song", song_name),
+                        "singer": first.get("singer", singer)
+                    }
+        
+        # 策略2：如果 index 不是1，尝试 n=1（第一首）
+        if index != 1:
+            params2 = {"msg": song_name, "n": 1}
+            data2 = api_request_with_retry(platform_url, params2, config)
+            if data2 and data2.get("code") == 0:
+                info = data2.get("data")
+                if isinstance(info, dict):
+                    music_url = info.get("music")
+                    if music_url:
+                        return {
+                            "music_url": music_url,
+                            "song": info.get("song", song_name),
+                            "singer": info.get("singer", singer)
+                        }
+        
+        # 策略3：尝试使用 num=1（返回列表，但可能包含music字段？）
+        params3 = {"msg": song_name, "num": 1}
+        data3 = api_request_with_retry(platform_url, params3, config)
+        if data3 and data3.get("code") == 0:
+            result = data3.get("data")
+            if isinstance(result, list) and len(result) > 0:
+                first = result[0]
+                music_url = first.get("music")
+                if music_url:
+                    return {
+                        "music_url": music_url,
+                        "song": first.get("song", song_name),
+                        "singer": first.get("singer", singer)
+                    }
+        
+        # 所有策略失败
+        if config["debug_mode"]:
+            print(colorize(f"[DEBUG] 波点音乐获取链接失败，已尝试所有策略", Colors.YELLOW, config["color_enabled"]))
         return None
 
     # 网易云、咪咕：使用 n=1，查询时拼接歌手名
