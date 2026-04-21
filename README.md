@@ -1,4 +1,4 @@
-# getmusic (min-cmd)
+# getmusic
 
 > 🎵 轻量级命令行音乐搜索工具 — 纯 Python 标准库，零依赖
 
