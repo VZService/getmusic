@@ -1,5 +1,5 @@
 ---
-name: BUG 报告
+name: 🐛 BUG 报告
 about: 报告程序缺陷或错误
 title: '[BUG] 简短描述问题'
 labels: 'BUG'
