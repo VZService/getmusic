@@ -56,14 +56,15 @@ class Toast(Popup):
         super().__init__(**kw)
         self.title = ''
         self.size_hint = (0.6, 0.16)
+        self.auto_dismiss = True
         Clock.schedule_once(lambda dt: self.dismiss(), 2.0)
-        self.content = BoxLayout(
-            spacing=8, padding=12,
-            children=[Label(
-                text=f'{icon}  {msg}', font_name=CF, font_size='14sp',
-                size_hint_x=1, color=WHITE, halign='center', valign='middle'
-            )]
-        )
+        layout = BoxLayout(
+            orientation='horizontal', spacing=8, padding=12,
+            size_hint=(1, 1))
+        layout.add_widget(Label(
+            text=f'{icon}  {msg}', font_name=CF, font_size='14sp',
+            size_hint=(1, 1), color=WHITE, halign='center', valign='middle'))
+        self.content = layout
 
 
 class Welcome(Screen):
