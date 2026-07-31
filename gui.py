@@ -140,12 +140,11 @@ class Search(Screen):
                               size_hint_y=None, height=dp(28), halign='left', color=GRAY))
         plat_row = BoxLayout(size_hint_y=None, height=dp(48), spacing=8)
         for key, info in PLATFORMS.items():
-            btn = ToggleButton(text=info['name'], font_name=CF, font_size='14sp',
-                               size_hint=(1, 1),
-                               background_color=(0.12, 0.12, 0.14, 1),
-                               background_color_down=BLUE,
-                               color=WHITE, down_color=WHITE)
-            btn.bind(state=self._on_toggle)
+            btn = Button(text=info['name'], font_name=CF, font_size='14sp',
+                         size_hint=(1, 1),
+                         background_color=(0.12, 0.12, 0.14, 1),
+                         color=WHITE)
+            btn.bind(on_press=lambda x, k=key: self._on_toggle(k))
             self.btns[key] = btn
             plat_row.add_widget(btn)
         body.add_widget(plat_row)
@@ -185,21 +184,22 @@ class Search(Screen):
         main.add_widget(scroll)
         self.add_widget(main)
 
-    def _on_toggle(self, instance, state):
-        if state == 'down':
-            for k, b in self.btns.items():
-                if b is not instance:
-                    b.state = 'normal'
-            self.platform = instance
-            self.status.text = f'已选择: {PLATFORMS[self.platform]["name"]}'
-            self.status.color = GRAY
-            if self.platform == '3':
-                self.status.text = '⚠️  波点音乐可能只返回试听片段'
-                self.status.color = ORANGE
-        else:
+    def _on_toggle(self, key):
+        if self.platform == key:
+            self.btns[key].background_color = (0.12, 0.12, 0.14, 1)
             self.platform = None
             self.status.text = ''
             self.status.color = MUTED
+        else:
+            for k, b in self.btns.items():
+                b.background_color = (0.12, 0.12, 0.14, 1)
+            self.btns[key].background_color = BLUE
+            self.platform = key
+            self.status.text = f'已选择: {PLATFORMS[key]["name"]}'
+            self.status.color = GRAY
+            if key == '3':
+                self.status.text = '⚠️  波点音乐可能只返回试听片段'
+                self.status.color = ORANGE
 
     def do_search(self, instance):
         if not self.platform:
