@@ -11,6 +11,7 @@ from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.widget import Widget
@@ -65,8 +66,8 @@ class Toast(Popup):
         )
 
 
-class Welcome(Widget):
-    def __init__(self, name=None, **kw):
+class Welcome(Screen):
+    def __init__(self, **kw):
         super().__init__(**kw)
         v = BoxLayout(orientation='vertical', padding=30, spacing=0)
         v.add_widget(Widget(size_hint_y=None, height=dp(60)))
@@ -103,8 +104,8 @@ class Welcome(Widget):
             self.manager.current = 'search'
 
 
-class Search(Widget):
-    def __init__(self, name=None, **kw):
+class Search(Screen):
+    def __init__(self, **kw):
         super().__init__(**kw)
         self.platform = None
         self.config = load_config()
@@ -264,8 +265,8 @@ class Search(Widget):
         History(self.config).open()
 
 
-class Result(Widget):
-    def __init__(self, name=None, **kw):
+class Result(Screen):
+    def __init__(self, **kw):
         super().__init__(**kw)
         self.songs = []
         self.platform = None
