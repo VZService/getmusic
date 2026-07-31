@@ -16,7 +16,13 @@
 ### 安装依赖
 
 ```
-pip install kivy
+pip install -r requirements.txt
+```
+
+或直接：
+
+```
+pip install kivy>=2.3.0
 ```
 
 ### 运行
@@ -42,6 +48,7 @@ max-gui/
 │   └── chinesefont.ttf  # 中文字体（解决中文乱码，可选）
 ├── setting.json         # 用户配置（首次运行自动生成）
 ├── cache.json           # 历史缓存（自动保存）
+├── requirements.txt     # Python 依赖清单
 └── README.md            # 本文件
 ```
 
@@ -49,7 +56,8 @@ max-gui/
 
 | 组件     | 技术                             |
 |--------|--------------------------------|
-| GUI 框架 | [Kivy](https://kivy.org/) 2.3+ |
+| GUI 框架 | [Kivy](https://kivy.org/) 2.3+ (最低 2.3.0) |
+| Python 版本 | 3.8+ |
 | 网络请求   | Python 标准库 `urllib`            |
 | 数据解析   | Python 标准库 `json`              |
 
