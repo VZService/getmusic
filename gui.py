@@ -318,7 +318,12 @@ class Result(Screen):
 
         card = BoxLayout(orientation='vertical', spacing=4,
                          size_hint_y=None, height=dp(75),
-                         padding=[10, 5], background_color=CARD)
+                         padding=[10, 5])
+        with card.canvas.before:
+            from kivy.graphics import Color, Rectangle
+            Color(*CARD)
+            card.bg_rect = Rectangle(pos=card.pos, size=card.size)
+        card.bind(pos=self._update_bg_rect, size=self._update_bg_rect)
 
         top = BoxLayout(size_hint_y=None, height=dp(42), spacing=8)
         top.add_widget(Label(
@@ -343,8 +348,12 @@ class Result(Screen):
         card.add_widget(top)
 
         area = BoxLayout(size_hint_y=None, height=dp(30), spacing=6,
-                         padding=[10, 3], opacity=0,
-                         background_color=(0.10, 0.10, 0.12, 1))
+                         padding=[10, 3], opacity=0)
+        with area.canvas.before:
+            from kivy.graphics import Color, Rectangle
+            Color(*(0.10, 0.10, 0.12, 1))
+            area.bg_rect = Rectangle(pos=area.pos, size=area.size)
+        area.bind(pos=self._update_bg_rect, size=self._update_bg_rect)
         bar = BoxLayout(spacing=6)
         lbl = Label(text='', font_name=CF, font_size='11sp',
                     size_hint_x=1, halign='left', valign='middle', color=LINK)
@@ -358,6 +367,13 @@ class Result(Screen):
         card.add_widget(area)
         self.bars.append((area, lbl, copy, btn))
         self.grid.add_widget(card)
+
+    @staticmethod
+    def _update_bg_rect(widget, *args):
+        bg = getattr(widget, 'bg_rect', None)
+        if bg:
+            bg.pos = widget.pos
+            bg.size = widget.size
 
     def _fetch(self, index):
         s = self.songs[index - 1]
