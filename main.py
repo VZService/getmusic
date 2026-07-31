@@ -32,8 +32,9 @@ def main():
             num_str = input(colorize(f"🔢搜索数量（默认{config['default_num']}，直接回车使用默认）: ", Colors.CYAN, config["color_enabled"])).strip()
             if num_str.isdigit():
                 config["default_num"] = int(num_str)
-            else:
-                config["default_num"] = load_config()["default_num"]
+            elif num_str:
+                print(colorize("输入无效，使用默认值", Colors.YELLOW, config["color_enabled"]))
+            # 未输入时保持默认值不变
 
             print(colorize(f"🔍正在搜索“{keyword}”（最多{config['default_num']}首），请稍候...", Colors.BLUE, config["color_enabled"]))
             songs = search_songs(platform['url'], keyword, config)

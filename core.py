@@ -2,9 +2,10 @@
 
 import json
 import os
-import urllib.request
-import urllib.parse
+import time
 import urllib.error
+import urllib.parse
+import urllib.request
 from datetime import datetime
 
 # ---------- 配置常量 ----------
@@ -98,28 +99,26 @@ def api_request_with_retry(platform_url, params, config):
     retries = config["max_retries"]
     delay = config["retry_delay"]
     timeout = config["timeout"]
-    color = config["color_enabled"]
     
     for attempt in range(1, retries + 1):
         try:
             with urllib.request.urlopen(url, timeout=timeout) as resp:
                 data = json.loads(resp.read().decode('utf-8'))
             if config["debug_mode"]:
-                print(colorize("\n[DEBUG] API返回:", Colors.MAGENTA, color))
+                print(colorize("\n[DEBUG] API返回:", Colors.MAGENTA, config["color_enabled"]))
                 print(json.dumps(data, indent=2, ensure_ascii=False))
             return data
         except urllib.error.URLError as e:
-            print(colorize(f"🌐❎ 网络错误 (尝试 {attempt}/{retries}): {e.reason}", Colors.RED, color))
+            print(colorize(f"🌐❎ 网络错误 (尝试 {attempt}/{retries}): {e.reason}", Colors.RED, config["color_enabled"]))
             if attempt < retries:
-                import time
                 time.sleep(delay)
             else:
                 return None
         except json.JSONDecodeError:
-            print(colorize("❎API返回解析失败", Colors.RED, color))
+            print(colorize("❎ API返回解析失败", Colors.RED, config["color_enabled"]))
             return None
         except Exception as e:
-            print(colorize(f"❓未知错误: {e}", Colors.RED, color))
+            print(colorize(f"❓ 未知错误: {e}", Colors.RED, config["color_enabled"]))
             return None
     return None
 
