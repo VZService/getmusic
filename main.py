@@ -1,5 +1,8 @@
 """getmusic max-gui -- 基于 Kivy"""
 
+import os
+os.environ['SDL_IMMERSE_MODE'] = '1'
+
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, SlideTransition
 from kivy.config import Config
