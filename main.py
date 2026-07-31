@@ -8,6 +8,7 @@ Config.set('graphics', 'width', '500')
 Config.set('graphics', 'height', '700')
 Config.set('graphics', 'resizable', '0')
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
+Config.set('input', 'text', 'sdl2')
 
 from gui import Welcome, Search, Result
 
