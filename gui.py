@@ -66,7 +66,7 @@ class Toast(Popup):
 
 
 class Welcome(Widget):
-    def __init__(self, **kw):
+    def __init__(self, name=None, **kw):
         super().__init__(**kw)
         v = BoxLayout(orientation='vertical', padding=30, spacing=0)
         v.add_widget(Widget(size_hint_y=None, height=dp(60)))
@@ -104,7 +104,7 @@ class Welcome(Widget):
 
 
 class Search(Widget):
-    def __init__(self, **kw):
+    def __init__(self, name=None, **kw):
         super().__init__(**kw)
         self.platform = None
         self.config = load_config()
@@ -265,7 +265,7 @@ class Search(Widget):
 
 
 class Result(Widget):
-    def __init__(self, **kw):
+    def __init__(self, name=None, **kw):
         super().__init__(**kw)
         self.songs = []
         self.platform = None
