@@ -22,8 +22,12 @@ from core import (
 )
 
 _base = os.path.dirname(os.path.abspath(__file__))
-LabelBase.register(name='ChineseFont', fn_regular=os.path.join(_base, 'data', 'chinesefont.ttf'))
-CF = 'ChineseFont'
+_font_path = os.path.join(_base, 'data', 'chinesefont.ttf')
+if os.path.exists(_font_path):
+    LabelBase.register(name='ChineseFont', fn_regular=_font_path)
+    CF = 'ChineseFont'
+else:
+    CF = 'Roboto'
 
 
 class SettingsPopup(Popup):
@@ -84,24 +88,44 @@ class SettingsPopup(Popup):
 
     def save_and_close(self, instance):
         try:
-            self.config['default_num'] = int(self.num_input.text)
-            self.config['timeout'] = float(self.timeout_input.text)
-            self.config['max_retries'] = int(self.retries_input.text)
-            self.config['retry_delay'] = float(self.delay_input.text)
-            self.config['max_cache'] = int(self.cache_input.text)
+            default_num = int(self.num_input.text)
+            timeout_val = float(self.timeout_input.text)
+            max_retries = int(self.retries_input.text)
+            retry_delay = float(self.delay_input.text)
+            max_cache = int(self.cache_input.text)
+
+            if default_num <= 0:
+                raise ValueError("默认搜索数量必须大于0")
+            if timeout_val <= 0:
+                raise ValueError("超时时间必须大于0")
+            if max_retries <= 0:
+                raise ValueError("重试次数必须大于0")
+            if retry_delay < 0:
+                raise ValueError("重试间隔不能为负数")
+            if max_cache <= 0:
+                raise ValueError("缓存条目数必须大于0")
+
+            self.config['default_num'] = default_num
+            self.config['timeout'] = timeout_val
+            self.config['max_retries'] = max_retries
+            self.config['retry_delay'] = retry_delay
+            self.config['max_cache'] = max_cache
             save_config(self.config)
             self.save_callback(self.config)
             self.dismiss()
-        except ValueError:
-            pass
+        except ValueError as e:
+            if str(e) != "":
+                print(f"[设置错误] {e}")
+            else:
+                print("[设置错误] 请输入有效数字")
 
 
 class HistoryPopup(Popup):
-    # 保持你当前正常的历史记录窗口，不做任何修改
-    def __init__(self, **kwargs):
+    def __init__(self, config=None, **kwargs):
         super().__init__(**kwargs)
         self.title = ''
         self.size_hint = (0.8, 0.6)
+        self.config = config or {}
 
         main_layout = BoxLayout(orientation='vertical', spacing=5, padding=10)
 
@@ -126,6 +150,7 @@ class HistoryPopup(Popup):
     def _refresh(self, *args):
         self.grid.clear_widgets()
         cache = load_cache()
+        max_display = self.config.get('max_cache', 20)
         if not cache:
             self.grid.add_widget(Label(text='暂无历史记录', font_name=CF, size_hint_y=None, height=dp(40)))
             return
@@ -135,7 +160,7 @@ class HistoryPopup(Popup):
             Clock.schedule_once(lambda dt: self._refresh(), 0.1)
             return
 
-        for entry in reversed(cache[-20:]):
+        for entry in reversed(cache[-max_display:]):
             line = f"{entry['time']}  {entry['song']} - {entry['singer']}"
             lbl = Label(
                 text=line,
@@ -275,7 +300,7 @@ class SearchScreen(Screen):
         self.status_label.text = "设置已保存"
 
     def show_history(self, instance):
-        popup = HistoryPopup()
+        popup = HistoryPopup(self.config)
         popup.open()
 
     def do_search(self, instance):
