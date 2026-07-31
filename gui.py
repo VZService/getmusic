@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""getmusic max-gui — 图形界面版，基于 Kivy"""
+"""getmusic max-gui -- 图形界面版，基于 Kivy"""
 
 import os
 import threading
@@ -46,8 +46,8 @@ else:
 
 
 def toast(msg, color=ORANGE):
-    icons = {GREEN: '✅', ORANGE: '⚠️', RED: '❌'}
-    t = Toast(msg, icons.get(color, 'ℹ️'), color)
+    icons = {GREEN: 'OK', ORANGE: 'WARN', RED: 'ERROR'}
+    t = Toast(msg, icons.get(color, 'INFO'), color)
     t.open()
 
 
@@ -71,14 +71,14 @@ class Welcome(Screen):
         super().__init__(**kw)
         v = BoxLayout(orientation='vertical', padding=30, spacing=0)
         v.add_widget(Widget(size_hint_y=None, height=dp(60)))
-        v.add_widget(Label(text='🎵', font_name=CF, font_size='80sp',
+        v.add_widget(Label(text='music', font_name=CF, font_size='80sp',
                            size_hint_y=None, height=dp(120), halign='center'))
         v.add_widget(Label(text='getmusic', font_name=CF, font_size='32sp', bold=True,
                            size_hint_y=None, height=dp(60), halign='center', color=BLUE))
         v.add_widget(Label(text='音乐获取工具', font_name=CF, font_size='18sp',
                            size_hint_y=None, height=dp(40), halign='center', color=GRAY))
         v.add_widget(Label(
-            text='支持网易云音乐 · 咪咕音乐 · 波点音乐\n获取 VIP 歌曲播放链接',
+            text='支持网易云音乐 - 咪咕音乐 - 波点音乐\n获取 VIP 歌曲播放链接',
             font_name=CF, font_size='14sp',
             size_hint_y=None, height=dp(60),
             halign='center', valign='middle', color=MUTED))
@@ -116,12 +116,12 @@ class Search(Screen):
 
         # 标题栏
         hdr = BoxLayout(size_hint_y=None, height=dp(45), spacing=8)
-        hdr.add_widget(Label(text='🎶  搜索音乐', font_name=CF, font_size='18sp', bold=True,
+        hdr.add_widget(Label(text='搜索音乐', font_name=CF, font_size='18sp', bold=True,
                              size_hint_x=1, color=WHITE, halign='left'))
-        hist = Button(text='📋 历史', font_name=CF, font_size='13sp',
+        hist = Button(text='历史记录', font_name=CF, font_size='13sp',
                       size_hint=(None, None), size=(dp(80), dp(35)),
                       background_color=CARD, color=WHITE)
-        sett = Button(text='⚙️ 设置', font_name=CF, font_size='13sp',
+        sett = Button(text='设置', font_name=CF, font_size='13sp',
                       size_hint=(None, None), size=(dp(80), dp(35)),
                       background_color=CARD, color=WHITE)
         hist.bind(on_press=self.show_history)
@@ -169,7 +169,7 @@ class Search(Screen):
         body.add_widget(self.num)
 
         # 搜索按钮
-        self.sbtn = Button(text='🔍  搜 索', font_name=CF, font_size='20sp',
+        self.sbtn = Button(text='搜 索', font_name=CF, font_size='20sp',
                            size_hint_y=None, height=dp(55),
                            background_color=BLUE, color=WHITE)
         self.sbtn.bind(on_press=self.do_search)
@@ -198,7 +198,7 @@ class Search(Screen):
             self.status.text = f'已选择: {PLATFORMS[key]["name"]}'
             self.status.color = GRAY
             if key == '3':
-                self.status.text = '⚠️  波点音乐可能只返回试听片段'
+                self.status.text = '[!] 波点音乐可能只返回试听片段'
                 self.status.color = ORANGE
 
     def do_search(self, instance):
@@ -216,7 +216,7 @@ class Search(Screen):
 
         plat = PLATFORMS[self.platform]
         self.sbtn.disabled = True
-        self.sbtn.text = '⏳  搜索中...'
+        self.sbtn.text = '搜索中...'
         self.sbtn.color = MUTED
         self.status.text = f'正在搜索 "{kw}"...'
         self.status.color = BLUE
@@ -237,7 +237,7 @@ class Search(Screen):
     def _done(self, songs, plat, kw, err):
         self.searching = False
         self.sbtn.disabled = False
-        self.sbtn.text = '🔍  搜 索'
+        self.sbtn.text = '搜 索'
         self.sbtn.color = WHITE
 
         if err:
@@ -278,7 +278,7 @@ class Result(Screen):
         hdr = BoxLayout(size_hint_y=None, height=dp(45), spacing=8)
         self.ttl = Label(text='搜索结果', font_name=CF, font_size='18sp', bold=True,
                          size_hint_x=1, halign='left', color=WHITE)
-        back = Button(text='←  返回', font_name=CF, font_size='14sp',
+        back = Button(text='<-  返回', font_name=CF, font_size='14sp',
                       size_hint=(None, None), size=(dp(80), dp(35)),
                       background_color=CARD, color=WHITE)
         back.bind(on_press=lambda x: setattr(self.manager, 'current', 'search'))
@@ -348,7 +348,7 @@ class Result(Screen):
         bar = BoxLayout(spacing=6)
         lbl = Label(text='', font_name=CF, font_size='11sp',
                     size_hint_x=1, halign='left', valign='middle', color=LINK)
-        copy = Button(text='📋 复制', font_name=CF, font_size='11sp',
+        copy = Button(text='复制', font_name=CF, font_size='11sp',
                       size_hint=(None, None), size=(dp(70), dp(26)),
                       background_color=GREEN, color=WHITE)
         copy.opacity = 0
@@ -363,7 +363,7 @@ class Result(Screen):
         s = self.songs[index - 1]
         name, singer = s.get('song', '未知'), s.get('singer', '未知')
         _, _, _, btn = self.bars[index - 1]
-        btn.text = '⏳ 获取中...'
+        btn.text = '获取中...'
         btn.disabled = True
         btn.color = MUTED
         self.info.text = f'正在获取《{name}》播放链接...'
@@ -394,14 +394,14 @@ class Result(Screen):
         add_to_cache(result.get('song', name), result.get('singer', singer),
                      url, self.platform['name'], self.config.get('max_cache', 20))
 
-        btn.text = '✓ 已获取'
+        btn.text = '[v] 已获取'
         btn.background_color = GREEN
         btn.disabled = True
 
         lbl.text = url
         copy.opacity = 1
         area.opacity = 1
-        self.info.text = f'✅  {result.get("song", name)} - {result.get("singer", singer)}'
+        self.info.text = f'[OK]   {result.get("song", name)} - {result.get("singer", singer)}'
         self.info.color = GREEN
 
         copy.bind(on_press=lambda x: (Clipboard.copy(url), toast('已复制', GREEN)))
@@ -420,9 +420,9 @@ class Settings(Popup):
         main.add_widget(BoxLayout(
             size_hint_y=None, height=dp(38), spacing=8,
             children=[
-                Label(text='⚙️  设置', font_name=CF, font_size='18sp', bold=True,
+                Label(text='设置', font_name=CF, font_size='18sp', bold=True,
                       size_hint_x=1, halign='left', color=WHITE),
-                Button(text='✕', font_name=CF, font_size='14sp',
+                Button(text='x', font_name=CF, font_size='14sp',
                        size_hint=(None, None), size=(dp(36), dp(36)),
                        background_color=RED, color=WHITE)
             ]))
@@ -507,9 +507,9 @@ class History(Popup):
         main.add_widget(BoxLayout(
             size_hint_y=None, height=dp(38), spacing=8,
             children=[
-                Label(text='📋  历史记录', font_name=CF, font_size='18sp', bold=True,
+                Label(text='历史记录', font_name=CF, font_size='18sp', bold=True,
                       size_hint_x=1, halign='left', color=WHITE),
-                Button(text='✕', font_name=CF, font_size='14sp',
+                Button(text='x', font_name=CF, font_size='14sp',
                        size_hint=(None, None), size=(dp(36), dp(36)),
                        background_color=RED, color=WHITE)
             ]))
@@ -547,7 +547,7 @@ class History(Popup):
 
 
 class GetMusicApp(App):
-    title = 'getmusic — 音乐获取工具'
+    title = 'getmusic -- 音乐获取工具'
 
     def build(self):
         from kivy.uix.screenmanager import ScreenManager, SlideTransition

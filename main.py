@@ -1,4 +1,4 @@
-"""getmusic max-gui — 基于 Kivy"""
+"""getmusic max-gui -- 基于 Kivy"""
 
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, SlideTransition
@@ -13,7 +13,7 @@ from gui import Welcome, Search, Result
 
 
 class GetMusicApp(App):
-    title = 'getmusic — 音乐获取工具'
+    title = 'getmusic -- 音乐获取工具'
 
     def build(self):
         sm = ScreenManager(transition=SlideTransition())
