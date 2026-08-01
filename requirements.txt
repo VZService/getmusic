@@ -1,1 +1,4 @@
-kivy>=2.3.0
+# 本图形界面基于标准库 tkinter，无需第三方 GUI 依赖。
+# tkinter 随 Python 自带（Windows / macOS 已内置）；
+# Linux 若缺失请安装：sudo apt install python3-tk
+# 业务逻辑依赖仅使用标准库 urllib / json，无需额外安装。
