@@ -36,9 +36,14 @@ def main():
                 print(colorize("输入无效，使用默认值", Colors.YELLOW, config["color_enabled"]))
             # 未输入时保持默认值不变
 
-            print(colorize(f"🔍正在搜索“{keyword}”（最多{config['default_num']}首），请稍候...", Colors.BLUE, config["color_enabled"]))
-            songs = search_songs(platform['url'], keyword, config)
-            if not songs:
+            print(colorize(f"🔍正在搜索"{keyword}"（最多{config['default_num']}首），请稍候...", Colors.BLUE, config["color_enabled"]))
+            try:
+                songs = search_songs(platform['url'], keyword, config)
+            except Exception as e:
+                print(colorize(f"❎搜索失败: {e}", Colors.RED, config["color_enabled"]))
+                continue
+
+        if not songs:
                 print(colorize("❎没有找到相关歌曲，请尝试其他关键词", Colors.RED, config["color_enabled"]))
                 continue
 

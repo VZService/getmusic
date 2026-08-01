@@ -88,9 +88,9 @@ def add_to_cache(song_name, singer, music_url, platform, max_cache):
 
 # ---------- 平台配置 ----------
 PLATFORMS = {
-    "1": {"name": "网易云音乐", "url": "https://a.aa.cab/wy.music"},
-    "2": {"name": "咪咕音乐",   "url": "https://a.aa.cab/mg.music"},
-    "3": {"name": "波点音乐",   "url": "https://a.aa.cab/bd.music"}
+    "1": {"name": "网易云音乐", "url": "https://a.aa.cab/wy.music", "accent": "#d33a3a"},
+    "2": {"name": "咪咕音乐",   "url": "https://a.aa.cab/mg.music", "accent": "#1f9e8f"},
+    "3": {"name": "波点音乐",   "url": "https://a.aa.cab/bd.music", "accent": "#d9811a"}
 }
 
 # ---------- API请求（带重试） ----------
@@ -100,6 +100,7 @@ def api_request_with_retry(platform_url, params, config):
     delay = config["retry_delay"]
     timeout = config["timeout"]
     
+    last_err = None
     for attempt in range(1, retries + 1):
         try:
             with urllib.request.urlopen(url, timeout=timeout) as resp:
@@ -109,27 +110,47 @@ def api_request_with_retry(platform_url, params, config):
                 print(json.dumps(data, indent=2, ensure_ascii=False))
             return data
         except urllib.error.URLError as e:
-            print(colorize(f"🌐❎ 网络错误 (尝试 {attempt}/{retries}): {e.reason}", Colors.RED, config["color_enabled"]))
+            last_err = e
+            if config["debug_mode"]:
+                print(colorize(f"🌐❎ 网络错误 (尝试 {attempt}/{retries}): {e.reason}", Colors.RED, config["color_enabled"]))
             if attempt < retries:
                 time.sleep(delay)
-            else:
-                return None
-        except json.JSONDecodeError:
-            print(colorize("❎ API返回解析失败", Colors.RED, config["color_enabled"]))
-            return None
+        except json.JSONDecodeError as e:
+            last_err = e
+            if config["debug_mode"]:
+                print(colorize("❎ API返回解析失败", Colors.RED, config["color_enabled"]))
+            if attempt < retries:
+                time.sleep(delay)
         except Exception as e:
-            print(colorize(f"❓ 未知错误: {e}", Colors.RED, config["color_enabled"]))
-            return None
-    return None
+            last_err = e
+            if config["debug_mode"]:
+                print(colorize(f"❓ 未知错误: {e}", Colors.RED, config["color_enabled"]))
+            if attempt < retries:
+                time.sleep(delay)
+    # 所有重试均失败：抛出异常，让上层区分"网络错误"与"无结果"
+    if last_err is not None:
+        raise last_err
+    raise RuntimeError("请求失败（未知原因）")
+
+
+def _safe_fetch(platform_url, params, config):
+    """安全调用 API，异常时返回 None（兼容旧 fetch 逻辑）"""
+    try:
+        return api_request_with_retry(platform_url, params, config)
+    except Exception:
+        return None
+
 
 def search_songs(platform_url, keyword, config):
-    """搜索歌曲，统一使用 num 参数获取列表（所有平台均支持）"""
+    """搜索歌曲，统一使用 num 参数获取列表（所有平台均支持）
+
+    网络故障或 API 返回错误时抛出异常，便于上层区分"网络错误"与"无结果"。
+    """
     params = {"msg": keyword, "num": config["default_num"]}
     data = api_request_with_retry(platform_url, params, config)
-    if not data or data.get("code") != 0:
-        if data:
-            print(colorize(f"❎获取失败: {data.get('msg', '未知错误')}", Colors.RED, config["color_enabled"]))
-        return []
+    if not isinstance(data, dict) or data.get("code") != 0:
+        msg = data.get("msg", "未知错误") if isinstance(data, dict) else "未知错误"
+        raise RuntimeError(f"获取失败: {msg}")
     result = data.get("data")
     if isinstance(result, dict):
         return [result] if result.get("music") else []
@@ -147,7 +168,7 @@ def fetch_music_by_song(platform_url, song_name, singer, config, index=1):
     if "bd.music" in platform_url:
         # 策略1：使用 n=index
         params = {"msg": song_name, "n": index}
-        data = api_request_with_retry(platform_url, params, config)
+        data = _safe_fetch(platform_url, params, config)
         if data and data.get("code") == 0:
             info = data.get("data")
             if isinstance(info, dict):
@@ -171,7 +192,7 @@ def fetch_music_by_song(platform_url, song_name, singer, config, index=1):
         # 策略2：如果 index 不是1，尝试 n=1（第一首）
         if index != 1:
             params2 = {"msg": song_name, "n": 1}
-            data2 = api_request_with_retry(platform_url, params2, config)
+            data2 = _safe_fetch(platform_url, params2, config)
             if data2 and data2.get("code") == 0:
                 info = data2.get("data")
                 if isinstance(info, dict):
@@ -185,7 +206,7 @@ def fetch_music_by_song(platform_url, song_name, singer, config, index=1):
         
         # 策略3：尝试使用 num=1（返回列表，但可能包含music字段？）
         params3 = {"msg": song_name, "num": 1}
-        data3 = api_request_with_retry(platform_url, params3, config)
+        data3 = _safe_fetch(platform_url, params3, config)
         if data3 and data3.get("code") == 0:
             result = data3.get("data")
             if isinstance(result, list) and len(result) > 0:
@@ -208,7 +229,7 @@ def fetch_music_by_song(platform_url, song_name, singer, config, index=1):
     if singer and singer != "未知":
         query = f"{song_name} {singer}"
     params = {"msg": query, "n": 1}
-    data = api_request_with_retry(platform_url, params, config)
+    data = _safe_fetch(platform_url, params, config)
     if not data or data.get("code") != 0:
         return None
     info = data.get("data", {})
