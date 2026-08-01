@@ -29,7 +29,11 @@ def main():
         num = int(num_str) if num_str.isdigit() else 10
 
         print(f"[...] 正在搜索 \"{keyword}\"（最多{num}首）...")
-        songs = search_songs(platform['url'], keyword, num)
+        try:
+            songs = search_songs(platform['url'], keyword, num)
+        except Exception as e:
+            print(f"[!] 搜索失败: {e}")
+            continue
         if not songs:
             print("[!] 未找到相关歌曲")
             continue
