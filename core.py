@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 
 import json
 import os
@@ -8,7 +8,7 @@ import urllib.parse
 import urllib.request
 from datetime import datetime
 
-# ---------- 配置常量 ----------
+# 配置常量
 DEFAULT_CONFIG = {
     "debug_mode": False,
     "default_num": 10,
@@ -22,7 +22,7 @@ DEFAULT_CONFIG = {
 CONFIG_FILE = "setting.json"
 CACHE_FILE = "cache.json"
 
-# ---------- 彩色输出 ----------
+# 彩色输出
 class Colors:
     RESET = "\033[0m"
     RED = "\033[91m"
@@ -38,7 +38,7 @@ def colorize(text, color, enable=True):
         return f"{color}{text}{Colors.RESET}"
     return text
 
-# ---------- 配置管理 ----------
+# 配置管理
 def load_config():
     if os.path.exists(CONFIG_FILE):
         try:
@@ -58,7 +58,7 @@ def save_config(config):
     with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
         json.dump(config, f, indent=2, ensure_ascii=False)
 
-# ---------- 缓存管理 ----------
+# 缓存管理
 def load_cache():
     if os.path.exists(CACHE_FILE):
         try:
@@ -86,14 +86,14 @@ def add_to_cache(song_name, singer, music_url, platform, max_cache):
     cache.append(entry)
     save_cache(cache, max_cache)
 
-# ---------- 平台配置 ----------
+# 平台配置
 PLATFORMS = {
     "1": {"name": "网易云音乐", "url": "https://a.aa.cab/wy.music", "accent": "#d33a3a"},
     "2": {"name": "咪咕音乐",   "url": "https://a.aa.cab/mg.music", "accent": "#1f9e8f"},
     "3": {"name": "波点音乐",   "url": "https://a.aa.cab/bd.music", "accent": "#d9811a"}
 }
 
-# ---------- API请求（带重试） ----------
+# API请求（带重试）
 def api_request_with_retry(platform_url, params, config):
     url = platform_url + "?" + urllib.parse.urlencode(params)
     retries = config["max_retries"]
