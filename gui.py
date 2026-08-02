@@ -162,7 +162,7 @@ class Welcome(Screen):
         b.configure(command=lambda: app.show("Search"))
         b.pack()
 
-        tk.Label(f, text="作者 QQ 535595887  |  GitHub 开源  |  禁止商用",
+        tk.Label(f, text="GitHub 开源  |  禁止商用",
                  bg=BG, fg=MUTED, font=font(10)).pack(side="bottom", pady=16)
 
 
