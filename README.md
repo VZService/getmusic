@@ -56,8 +56,8 @@ min-cmd/
 
 **怎么选？**
 - 想要**最简单、最快**的体验 → **min-cmd** ← 你在这里
-- 想要**功能完整**的命令行工具 → 切换到 [`max-cmd`](https://github.com/VZqwq/getmusic/tree/max-cmd)
-- 想要**图形界面** → 切换到 [`max-gui`](https://github.com/VZqwq/getmusic/tree/max-gui)（开发中）
+- 想要**功能完整**的命令行工具 → 切换到 [`max-cmd`](https://github.com/VZService/getmusic/tree/max-cmd)
+- 想要**图形界面** → 切换到 [`max-gui`](https://github.com/VZService/getmusic/tree/max-gui)（开发中）
 
 ```bash
 # 切换版本
@@ -79,5 +79,5 @@ git checkout min-cmd    # 回到精简版
 ❌ 禁止任何形式的商业用途  
 📜 修改后的衍生版本必须开源，并保留原始版权声明和作者信息
 
-**作者 QQ**: 535595887  
-**GitHub**: [VZqwq/getmusic](https://github.com/VZqwq/getmusic)
+**作者**: VZService  
+**GitHub**: [VZService/getmusic](https://github.com/VZService/getmusic)
