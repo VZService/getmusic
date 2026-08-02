@@ -59,9 +59,9 @@
 | **代码量** | ~90 行（极简） | ~260 行（完整） | 更多 |
 
 **怎么选？**
-- 想要**最简单快速**的体验 → 切换到 [`min-cmd`](https://github.com/VZqwq/getmusic/tree/min-cmd)
+- 想要**最简单快速**的体验 → 切换到 [`min-cmd`](https://github.com/VZService/getmusic/tree/min-cmd)
 - 想要**功能完整**的命令行工具 → **max-cmd** ← 你在这里
-- 想要**图形界面** → 切换到 [`max-gui`](https://github.com/VZqwq/getmusic/tree/max-gui)（开发中）
+- 想要**图形界面** → 切换到 [`max-gui`](https://github.com/VZService/getmusic/tree/max-gui)（开发中）
 
 ```bash
 # 切换版本
@@ -114,4 +114,4 @@ A：删除 `setting.json` 文件，下次运行脚本会自动生成默认配置
 3. **开源义务**：任何修改后的衍生版本必须同样开源，并保留原始版权声明和作者信息。
 4. **免责声明**：作者不承担任何使用本软件造成的法律责任。
 
-如需商业授权，请联系作者 QQ：535595887 或提交 GitHub issues
+如需商业授权，请通过 GitHub issues 联系作者
