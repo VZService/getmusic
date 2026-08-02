@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 
 import json
 import sys
@@ -7,17 +7,17 @@ import urllib.request
 import urllib.parse
 import urllib.error
 
-# ---------- 唯一选项：DEBUG模式 ----------
+# 唯一选项：DEBUG模式
 DEBUG = "--debug" in sys.argv
 
-# ---------- 平台配置 ----------
+# 平台配置
 PLATFORMS = {
     "1": {"name": "网易云音乐", "url": "https://a.aa.cab/wy.music", "accent": "#d33a3a"},
     "2": {"name": "咪咕音乐",   "url": "https://a.aa.cab/mg.music", "accent": "#1f9e8f"},
     "3": {"name": "波点音乐",   "url": "https://a.aa.cab/bd.music", "accent": "#d9811a"}
 }
 
-# ---------- API请求（带重试） ----------
+# API请求（带重试）
 def api_request(platform_url, params):
     url = platform_url + "?" + urllib.parse.urlencode(params)
     last_err = None
