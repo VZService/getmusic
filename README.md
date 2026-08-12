@@ -59,6 +59,8 @@ min-cmd/
 - 想要**功能完整**的命令行工具 → 切换到 [`max-cmd`](https://github.com/VZService/getmusic/tree/max-cmd)
 - 想要**图形界面** → 切换到 [`max-gui`](https://github.com/VZService/getmusic/tree/max-gui)（开发中）
 
+> 注：`max-gui` 的图形界面已由 Kivy 重写为 **tkinter**，以解决 Windows 下中文输入法无法输入的问题。
+
 ```bash
 # 切换版本
 git checkout max-cmd    # 完整版命令行
