@@ -56,12 +56,12 @@
 | **设置界面** | ❌ | ✅ 交互式配置 | ✅ |
 | **配置文件** | ❌ 无 | ✅ `setting.json` | ✅ |
 | **GUI 图形界面** | ❌ | ❌ | ✅ |
-| **代码量** | ~90 行（极简） | ~260 行（完整） | 更多 |
+| **代码量** | ~200 行（极简） | ~260 行（完整） | 更多 |
 
 **怎么选？**
 - 想要**最简单快速**的体验 → 切换到 [`min-cmd`](https://github.com/VZService/getmusic/tree/min-cmd)
 - 想要**功能完整**的命令行工具 → **max-cmd** ← 你在这里
-- 想要**图形界面** → 切换到 [`max-gui`](https://github.com/VZService/getmusic/tree/max-gui)（开发中）
+- 想要**图形界面** → 切换到 [`max-gui`](https://github.com/VZService/getmusic/tree/max-gui)（tkinter 图形界面版）
 
 ```bash
 # 切换版本
