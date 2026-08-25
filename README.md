@@ -27,7 +27,7 @@ python main.py --debug    # DEBUG 模式（打印 API 原始数据）
 ## 文件结构
 
 ```
-min-cmd/
+getmusic/  （min-cmd 分支，文件位于仓库根目录）
 ├── core.py      # 核心逻辑（API请求、搜索、获取链接）
 ├── main.py      # 主程序入口
 ├── ui.py        # 水印 + 平台选择界面
@@ -51,13 +51,13 @@ min-cmd/
 | **设置界面** | ❌ | ✅ 交互式配置 | ✅ |
 | **配置文件** | ❌ 无 | ✅ `setting.json` | ✅ |
 | **GUI 图形界面** | ❌ | ❌ | ✅ |
-| **代码量** | ~90 行（极简） | ~260 行 | 更多 |
+| **代码量** | ~200 行（极简） | ~260 行 | 更多 |
 | **适合场景** | 快速搜歌、嵌入脚本、学习参考 | 日常使用、功能完整 | 不习惯命令行的用户 |
 
 **怎么选？**
 - 想要**最简单、最快**的体验 → **min-cmd** ← 你在这里
 - 想要**功能完整**的命令行工具 → 切换到 [`max-cmd`](https://github.com/VZService/getmusic/tree/max-cmd)
-- 想要**图形界面** → 切换到 [`max-gui`](https://github.com/VZService/getmusic/tree/max-gui)（开发中）
+- 想要**图形界面** → 切换到 [`max-gui`](https://github.com/VZService/getmusic/tree/max-gui)（tkinter 图形界面版）
 
 > 注：`max-gui` 的图形界面已由 Kivy 重写为 **tkinter**，以解决 Windows 下中文输入法无法输入的问题。
 
