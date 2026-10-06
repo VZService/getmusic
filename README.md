@@ -145,8 +145,9 @@ git checkout max-gui   # 图形界面
 
 ## 许可
 
+本项目采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)（署名-非商业性使用-相同方式共享 4.0 国际）许可证，全文见 LICENSE 文件。条款要点：
 ✅ 允许个人学习、研究、非商业用途下的使用、修改、复制、分发
 ❌ 禁止任何形式的商业用途
-📜 修改后的衍生版本必须开源，并保留原始版权声明和作者信息
+📜 修改后的衍生版本必须以相同许可证开源，并保留原始版权声明和作者信息
 
 **GitHub**: [VZService/getmusic](https://github.com/VZService/getmusic)
