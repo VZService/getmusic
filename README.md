@@ -77,9 +77,11 @@ git checkout min-cmd    # 回到精简版
 
 ## 许可证
 
-✅ 允许个人学习、研究、非商业用途下的使用、修改、复制、分发  
-❌ 禁止任何形式的商业用途  
-📜 修改后的衍生版本必须开源，并保留原始版权声明和作者信息
+本项目采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)（署名-非商业性使用-相同方式共享 4.0 国际）许可证，全文见 LICENSE 文件：
+
+- ✅ 允许个人学习、研究、非商业用途下的使用、修改、复制、分发（需署名）
+- ❌ 禁止任何形式的商业用途
+- 📜 修改后的衍生版本必须以相同许可证开源，并保留原始版权声明和作者信息
 
 **作者**: VZService  
 **GitHub**: [VZService/getmusic](https://github.com/VZService/getmusic)
